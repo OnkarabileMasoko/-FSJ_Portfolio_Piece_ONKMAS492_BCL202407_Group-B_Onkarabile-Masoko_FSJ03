@@ -1,32 +1,31 @@
-import { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/react';
+import Link from 'next/link';
+import { useSession, signOut } from 'next-auth/react';
 
 export default function Home() {
-  const [products, setProducts] = useState([]);
   const { data: session } = useSession();
-
-  useEffect(() => {
-    fetchProducts();
-  }, []);
-
-  const fetchProducts = async () => {
-    const res = await fetch('/api/products');
-    const data = await res.json();
-    setProducts(data);
-  };
 
   return (
     <div>
       <h1>Welcome to our E-commerce Store</h1>
       {session ? (
-        <p>Welcome, {session.user.email}</p>
+        <>
+          <p>Welcome, {session.user.email}</p>
+          <button onClick={() => signOut()}>Sign Out</button>
+        </>
       ) : (
-        <p>Please sign in to access all features</p>
+        <>
+          <Link href="/auth/signin">Sign In</Link>
+          <Link href="/auth/signup">Sign Up</Link>
+        </>
       )}
       <h2>Products</h2>
       <ul>
         {products.map(product => (
-          <li key={product.id}>{product.title} - ${product.price}</li>
+          <li key={product.id}>
+            <Link href={`/product/${product.id}`}>
+              {product.title} - ${product.price}
+            </Link>
+          </li>
         ))}
       </ul>
     </div>
