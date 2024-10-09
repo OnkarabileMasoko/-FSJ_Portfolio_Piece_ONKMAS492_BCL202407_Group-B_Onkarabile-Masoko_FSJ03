@@ -15,8 +15,13 @@ const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 export const auth = getAuth(app);
 
-function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />;
+import NextApp from 'next/app';
+
+class MyApp extends NextApp {
+  render() {
+    const { Component, pageProps } = this.props;
+    return <Component {...pageProps} />;
+  }
 }
 
 export default MyApp;
